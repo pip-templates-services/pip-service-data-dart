@@ -1,0 +1,54 @@
+# Test config
+---
+# Container descriptor
+- descriptor: "pip-services:context-info:default:default:1.0"
+  name: "pip-service-data"
+  description: "Entities data microservice"
+
+# Console logger
+- descriptor: "pip-services:logger:console:default:1.0"
+  level: "trace"
+
+# Performance log counters
+- descriptor: "pip-services:counters:log:default:1.0"
+
+# Prometheus performance counters
+- descriptor: "pip-services:counters:prometheus:default:1.0"
+
+  connection:
+    protocol: http
+    uri: {{PUSHGATEWAY_METRICS_SERVICE_URI}}
+    host: localhost
+    port: 9090
+
+# File persistence
+- descriptor: "pip-service-data:persistence:file:default:1.0"
+  path: "./data/entities.json"
+
+# Default to in-memory persistence, if nothing is set
+- descriptor: "pip-service-data:persistence:memory:default:1.0"
+
+# Controller
+- descriptor: "pip-service-data:controller:default:default:1.0"
+
+# Common HTTP endpoint
+- descriptor: "pip-services:endpoint:http:default:1.0"
+  connection:
+    protocol: http
+    host: 0.0.0.0
+    port: 8080
+
+# HTTP service version 1.0
+- descriptor: "pip-service-data:service:commandable-http:default:1.0"
+  swagger:
+    enable: true
+    auto: true
+    route: swagger
+    name: Entities Service V1
+    description: microservice to demonstrate works with data microservices
+
+# Hearbeat service
+- descriptor: "pip-services:heartbeat-service:http:default:1.0"
+
+# Status service
+- descriptor: "pip-services:status-service:http:default:1.0"
